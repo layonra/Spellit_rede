@@ -132,18 +132,15 @@ public class NetworkImpl implements Network {
 	}
 
 	@Override
-	public String aguardarServidor(int clientPort) throws IOException {
+	public void aguardarServidor(int clientPort, AguardarServidor addTo) throws IOException {
 		DatagramPacket p = null;
 		String ip = "";
-		while (true) {
-			p = this.receiveDatagramPacket(clientPort);
-			boolean respostaDoServidor = new String(p.getData(), 0, p.getLength()).equals("OK");
-			if (respostaDoServidor) {
-				ip = p.getAddress().getHostAddress(); 
-				break;
-			}
+		p = this.receiveDatagramPacket(clientPort);
+		boolean respostaDoServidor = new String(p.getData(), 0, p.getLength()).equals("OK");
+		if (respostaDoServidor) {
+			ip = p.getAddress().getHostAddress();
+			this.listener.receiveOk(ip, addTo);
 		}
-		return ip;
 	}
 
 	@Override

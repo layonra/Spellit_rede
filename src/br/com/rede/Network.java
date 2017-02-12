@@ -105,6 +105,6 @@ public interface Network {
 	 * @return
 	 * @throws IOException
 	 */
-	public String aguardarServidor(int clientPort) throws IOException;
+	public void aguardarServidor(int clientPort, AguardarServidor addTo) throws IOException;
 
 }
