@@ -58,14 +58,6 @@ public interface Network {
 	public void serverSocketReceive(int port, Recebedor addTo) throws IOException, ClassNotFoundException;
 	
 	/**
-	 * Abre um servidor socket para receber dados. ServerSocket nunca fecha
-	 * @param port
-	 * @return
-	 * @throws IOException
-	 */
-	public void serverSocketReceive(int port) throws IOException, ClassNotFoundException;
-	
-	/**
 	 * 
 	 * @param data
 	 * @param length
@@ -76,6 +68,15 @@ public interface Network {
 
 	/**
 	 * 
+	 * @param object
+	 * @param address
+	 * @param port
+	 * @throws IOException
+	 */
+	public void sendDatagramPacket(Object object, InetAddress address, int port) throws IOException;
+	
+	/**
+	 * 
 	 * @param data
 	 * @param length
 	 * @param socket
@@ -84,6 +85,13 @@ public interface Network {
 	 */
 	public DatagramPacket receiveDatagramPacket(int port) throws IOException;
 
+	/**
+	 * 
+	 * @param port
+	 * @throws IOException
+	 */
+	public void datagramPacketServer(int port, DatagramPacketReceiver addTo) throws IOException, ClassNotFoundException;
+	
 	/**
 	 * 
 	 * @param data
@@ -98,7 +106,6 @@ public interface Network {
 			int port);
 	
 	/**
-	 * 
 	 * @param data
 	 * @param serverport
 	 * @param clientPort
@@ -106,5 +113,13 @@ public interface Network {
 	 * @throws IOException
 	 */
 	public void aguardarServidor(int clientPort, AguardarServidor addTo) throws IOException;
-
+	
+	/**
+	 * 
+	 * @param object
+	 * @return
+	 * @throws IOException
+	 */
+	public byte[] objectToByteArray(Object object) throws IOException;
+	public Object byteArrayToObject(byte[] bytes) throws IOException, ClassNotFoundException;
 }
