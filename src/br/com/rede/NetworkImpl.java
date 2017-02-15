@@ -27,7 +27,11 @@ import java.util.TimerTask;
  *
  */
 public class NetworkImpl implements Network {
-	private InicializarListener listener = new InicializarListener();
+	private InicializarListener listener;
+	
+	public NetworkImpl() {
+		this.listener = new InicializarListener();
+	}
 
 	@Override
 	public InetAddress getAddress() throws SocketException {
