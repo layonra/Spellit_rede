@@ -28,7 +28,7 @@ import java.util.TimerTask;
  */
 public class NetworkImpl implements Network {
 	private InicializarListener listener;
-	
+
 	public NetworkImpl() {
 		this.listener = new InicializarListener();
 	}
@@ -106,7 +106,7 @@ public class NetworkImpl implements Network {
 		datagramSocket.send(datagramPacket);
 		datagramSocket.close();
 	}
-	
+
 	@Override
 	public void sendDatagramPacket(Object object, InetAddress address, int port) throws IOException {
 		byte[] dados = this.objectToByteArray(object);
@@ -125,7 +125,7 @@ public class NetworkImpl implements Network {
 		datagramSocket.close();
 		return datagramPacket;
 	}
-	
+
 	@Override
 	public TimerTask sendDatagramPacketTask(byte[] data, int length, int delay, int period, InetAddress address,
 			int port) {
@@ -150,14 +150,16 @@ public class NetworkImpl implements Network {
 	public void aguardarServidor(int clientPort, AguardarServidor addTo) throws IOException {
 		DatagramPacket p = null;
 		String ip = "";
-		p = this.receiveDatagramPacket(clientPort);
-		boolean respostaDoServidor = new String(p.getData(), 0, p.getLength()).equals("OK");
-		if (respostaDoServidor) {
-			ip = p.getAddress().getHostAddress();
-			this.listener.receiveOk(ip, addTo);
+		while (true) {
+			p = this.receiveDatagramPacket(clientPort);
+			boolean respostaDoServidor = new String(p.getData(), 0, p.getLength()).equals("OK");
+			if (respostaDoServidor) {
+				ip = p.getAddress().getHostAddress();
+				this.listener.receiveOk(ip, addTo);
+			}
 		}
 	}
-	
+
 	@Override
 	public byte[] objectToByteArray(Object object) throws IOException {
 		byte[] dados = null;
@@ -170,7 +172,7 @@ public class NetworkImpl implements Network {
 		dados = byteArrayOutputStream.toByteArray();
 		return dados;
 	}
-	
+
 	@Override
 	public Object byteArrayToObject(byte[] bytes) throws IOException, ClassNotFoundException {
 		Object object = null;
@@ -181,17 +183,18 @@ public class NetworkImpl implements Network {
 	}
 
 	@Override
-	public void datagramPacketServer(int port, DatagramPacketReceiver addTo) throws IOException, ClassNotFoundException {
+	public void datagramPacketServer(int port, DatagramPacketReceiver addTo)
+			throws IOException, ClassNotFoundException {
 		byte[] data = new byte[5000];
 		byte[] dados;
 		Object object;
 		DatagramPacket datagramPacket = new DatagramPacket(data, data.length);
 		DatagramSocket datagramSocket = new DatagramSocket(port);
-		while(true) {
+		while (true) {
 			datagramSocket.receive(datagramPacket);
 			dados = datagramPacket.getData();
 			object = this.byteArrayToObject(dados);
 			this.listener.receiveDatagramPacket(object, addTo);
-		}		
+		}
 	}
 }
